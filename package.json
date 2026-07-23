@@ -2,9 +2,10 @@
   "name": "compsci326-project",
   "version": "1.0.0",
   "description": "Team Members:\r - Mikey Hadley, github: mhadley-umass\r - Jonathan Fang, github: jonathanfangg",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -19,6 +20,8 @@
   },
   "homepage": "https://github.com/jonathanfangg/compsci326-project#readme",
   "dependencies": {
-    "express": "^5.2.1"
+    "ejs": "^6.0.1",
+    "express": "^5.2.1",
+    "morgan": "^1.11.0"
   }
 }
