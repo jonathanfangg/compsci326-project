@@ -1,15 +1,42 @@
-import express from 'express';
+import express from "express";
+import morgan from "morgan";
+import notesRouter from "./routes/notes.js";
+import searchRouter from "./routes/search.js";
 
 const app = express();
-app.set("view engine", "ejs");
 const PORT = 3000;
 
-app.get('/', (req, res) => {
-  res.send('Welcome to our note taking app!');
+app.set("view engine", "ejs");
+app.set("views", "views");
+
+app.use(express.static("public"));
+app.use(express.json());
+
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
 });
 
-app.get('/about', (req, res) => {
-  res.send('We are a note taking app that is trying to make searching the web more sustainable, meaningful and informative.');
+app.use(morgan("dev"));
+
+app.use("/notes", notesRouter);
+app.use("/search", searchRouter);
+
+app.get("/", (req, res) => {
+  res.render("home", { title: "Search Notes" });
+});
+
+app.get("/about", (req, res) => {
+  res.render("about", { title: "About" });
+});
+
+app.use((req, res) => {
+  res.status(404).send("Page not found.");
+});
+
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).send("Something went wrong.");
 });
 
 app.listen(PORT, () => {
