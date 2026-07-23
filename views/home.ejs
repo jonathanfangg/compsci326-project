@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <%- include('partials/header') %>
+    <main>
+      <p>Welcome to our note taking app!</p>
+      <p>
+        You can search from here and we will send it to Google without the AI
+        overview.
+      </p>
+
+      <form action="/search" method="get" target="_blank">
+        <label for="q">Search the web</label>
+        <input id="q" name="q" type="text" />
+        <button type="submit">Search</button>
+      </form>
+
+      <p><a href="/notes">Go to your notes</a></p>
+    </main>
+  </body>
+</html>

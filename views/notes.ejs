@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    <%- include('partials/header') %>
+    <main>
+      <h2>Save a note</h2>
+      <form id="note-form">
+        <label for="query">Search query</label>
+        <input id="query" name="query" type="text">
+        <label for="text">Note</label>
+        <textarea id="text" name="text" rows="4"></textarea>
+        <button type="submit">Save note</button>
+      </form>
+      <p id="error"></p>
+
+      <h2>Saved notes</h2>
+      <ul id="note-list">
+        <% notes.forEach((note) => { %>
+          <li>
+            <a href="<%= note.searchUrl %>"><%= note.query %></a>
+            <p><%= note.text %></p>
+          </li>
+        <% }); %>
+      </ul>
+    </main>
+    <script src="/app.js" defer></script>
+  </body>
+</html>
