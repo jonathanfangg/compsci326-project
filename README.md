@@ -43,6 +43,8 @@ New features:
 ## System Diagram:
 
 ### Application  Layers:
+
+```
 ┌─────────────────────────────────────────────────────────┐
 │                    CLIENT (Browser)                     │
 │            Home Page | Notes Page | About Page          │
@@ -87,9 +89,11 @@ New features:
 │              DATABASE (notes.json)                      │
 │              Persistent note storage                    │
 └─────────────────────────────────────────────────────────┘
+```
 
 ### Search Feature Request Flow:
 
+```
 A user enters a search query on home page
             │
             ▼
@@ -106,9 +110,11 @@ A user enters a search query on home page
             │
             ▼
 New tab opens with search results
+```
 
 ### Notes Feature Request Flow:
 
+```
 A user fills out a search query and note body on /notes
             │
             ▼
@@ -128,3 +134,4 @@ A user fills out a search query and note body on /notes
             │
             ▼
 Notes list updated and displayed on page
+```
