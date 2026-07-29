@@ -1,5 +1,10 @@
 import { Ok, Err } from "../result.js";
-import { getAll, create } from "../repositories/notesRepository.js";
+import {
+  getAll,
+  findById,
+  create,
+  removeById,
+} from "../repositories/notesRepository.js";
 import { toNoteDto } from "../dtos/noteDto.js";
 
 const SEARCH_URL = "https://www.google.com/search?q=";
@@ -39,4 +44,11 @@ export const createNote = async (data) => {
 
   const created = await create(result.value);
   return Ok(toNoteDto(created));
+};
+
+export const deleteNote = async (id) => {
+  const existing = await findById(id);
+  if (!existing) return Err({ status: 404, message: "Note not found" });
+  await removeById(id);
+  return Ok(undefined);
 };

@@ -9,5 +9,6 @@ const asyncHandler = (fn) => (req, res, next) => {
 
 router.get("/", asyncHandler(notesController.index));
 router.post("/", asyncHandler(notesController.create));
+router.delete("/:id", asyncHandler(notesController.destroy));
 
 export default router;

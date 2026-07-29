@@ -2,12 +2,15 @@ import { jest } from "@jest/globals";
 
 jest.unstable_mockModule("../repositories/notesRepository.js", () => ({
   getAll: jest.fn(),
+  findById: jest.fn(),
   create: jest.fn((data) => ({ _id: "fake-id", ...data })),
+  removeById: jest.fn(),
 }));
 
-const { createNote, listNotes, searchFor } =
+const { createNote, deleteNote, listNotes, searchFor } =
   await import("../services/notesService.js");
-const { getAll } = await import("../repositories/notesRepository.js");
+const { getAll, findById, removeById } =
+  await import("../repositories/notesRepository.js");
 
 test("createNote rejects a missing query", async () => {
   const result = await createNote({
@@ -55,6 +58,7 @@ test("createNote saves a valid note and returns its DTO", async () => {
   });
   expect(result.ok).toBe(true);
   expect(result.value).toEqual({
+    id: "fake-id",
     query: "how do tides work",
     text: "The moon pulls water toward it.",
     searchUrl:
@@ -99,7 +103,25 @@ test("listNotes returns every note through the DTO", async () => {
   ]);
   const notes = await listNotes();
   expect(notes).toEqual([
-    { query: "tides", text: "the moon", searchUrl: "url-one" },
-    { query: "fish", text: "gills", searchUrl: "url-two" },
+    { id: "one", query: "tides", text: "the moon", searchUrl: "url-one" },
+    { id: "two", query: "fish", text: "gills", searchUrl: "url-two" },
   ]);
+});
+
+test("deleteNote returns a 404-shaped Err when the note does not exist", async () => {
+  findById.mockResolvedValueOnce(null);
+  const result = await deleteNote("000000000000000000000000");
+  expect(result.ok).toBe(false);
+  expect(result.error).toEqual({ status: 404, message: "Note not found" });
+});
+
+test("deleteNote removes the note when it exists", async () => {
+  findById.mockResolvedValueOnce({
+    _id: "fake-id",
+    query: "q",
+    text: "t",
+    searchUrl: "u",
+  });
+  const result = await deleteNote("fake-id");
+  expect(result.ok).toBe(true);
 });
