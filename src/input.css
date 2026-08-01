@@ -1,0 +1,11 @@
+@import "tailwindcss";
+@source "../views";
+@source "../public/app.js";
+
+@layer base {
+  button,
+  a {
+    transition-property: color, background-color, border-color, box-shadow;
+    transition-duration: 150ms;
+  }
+}
