@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title><%= title %></title>
     <link rel="stylesheet" href="/style.css">
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
   </head>
   <body>
     <%- include('partials/header') %>
@@ -24,6 +25,14 @@
           <li>
             <a href="<%= note.searchUrl %>"><%= note.query %></a>
             <p><%= note.text %></p>
+            <span class="htmx-indicator" id="indicator-<%= note.id %>">Deleting...</span>
+            <button
+              hx-delete="/notes/<%= note.id %>"
+              hx-target="closest li"
+              hx-swap="outerHTML"
+              hx-confirm="Delete this note?"
+              hx-indicator="#indicator-<%= note.id %>"
+            >Delete</button>
           </li>
         <% }); %>
       </ul>
