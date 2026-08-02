@@ -26,69 +26,69 @@ How to get it started:
 - Open your preferred IDE and run Git: Clone, putting this link in when prompted: https://github.com/jonathanfangg/compsci326-project
 - Once inside the project, open a terminal and run:
   - npm install
+  - npm run build:css
   - npm start
+- The server requires MongoDB. Set `MONGODB_URI` to your MongoDB connection string; when it is not set, the app uses `mongodb://dev:devpassword@mongo:27017/devdb?authSource=admin`, which matches the development container.
 - Visit http://localhost:3000 to view the server.
 - To shut the server down, type Ctrl + C into your terminal.
 
-New features: 
-- We have added two new features, search and notes
-- /search is accessed through the home page, and it opens a new tab with your search query and "-ai-none" appended to it.
-- /notes lets you create and saves notes that capture what your search query was and what you learned from the search.
-- The form consists of a "Search Query" title section and a "Note" body section.
-- To use search, simply visit the home page and type a search query into the search bar under "search the web" and hit submit.
-- To use Notes, visit http://localhost:3000/notes or just click on the notes tab below the header.
-- Then simply enter a search query and note body text, then click "save note".
-- After you submit the notes form, it validates the submission and writes the changes to notes.json through notesRepository.js.
+New features:
+
+- We have added search and notes. `/search` is accessed through the home page, and it opens a new tab with your search query and `-ai-none` appended to it.
+- `/notes` lets you create and save notes that capture what your search query was and what you learned from the search. The form consists of a "Search Query" title section and a "Note" body section.
+- To use search, visit the home page, enter a search query under "Search the web," and submit the form.
+- To use notes, visit http://localhost:3000/notes or click the Notes link in the header. Enter a search query and note body, then click "Save note."
+
+Sprint3 updates:
+
+- MongoDB repository: Notes are no longer read from or written to a JSON file. `repositories/notesRepository.js` defines a Mongoose schema and uses the operations: `find`, `findById`, `create`, `findByIdAndUpdate`, and `findByIdAndDelete`. `GET /notes` reads from MongoDB, `POST /notes` creates a new note, and `DELETE /notes/:id` removes one. MongoDB's `_id` is converted to the client `id` by `dtos/noteDto.js`.
+- Jest service tests: `__tests__/notesService.test.js` tests the service layer's validation and business rules, including missing or whitespace-only fields, trimming, search URL creation, listing notes through the DTO, and deleting existing or missing notes. The repository is mocked with `jest.unstable_mockModule`, so the suite does not need to connect to MongoDB to be run. Run it with `npm test`.
+- HTMX delete interaction: The delete buttons on `/notes` uses `hx-delete`, `hx-target="closest li"`, and `hx-swap="outerHTML"`. The server returns a successful and empty response. HTMX removes that note from the page without a reload. Save a note and click the delete button on the note to see the HTMX in action.
+- Tailwind visual design: The entire visual design has been overhauled with Tailwind utility classes generated from `src/input.css`. On a phone the navigation, search controls, form, and notes will stack vertically. At `sm` width the navigation and search controls use two columns. At `lg` width the notes page has a sticky note form beside the saved notes. Run `npm run build:css` then resize the browser to see the responsive layouts.
 
 ## System Diagram:
 
-### Application  Layers:
+### Application Layers:
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    CLIENT (Browser)                     │
-│            Home Page | Notes Page | About Page          │
-└────────────────────────┬────────────────────────────────┘
-                         │
-                    HTTP Request
-                         │
-                         ▼
-┌─────────────────────────────────────────────────────────┐
-│              ROUTES LAYER (Express)                     │
-│   /search  |  /notes  |  /  |  /about                   │
-└────────────────────────┬────────────────────────────────┘
-                         │
-                    Route Handler
-                         │
-                         ▼
-┌─────────────────────────────────────────────────────────┐
-│              CONTROLLER LAYER                           │
-│   Handles HTTP request logic and validation             │
-└────────────────────────┬────────────────────────────────┘
-                         │
-                   Business Logic
-                         │
-                         ▼
-┌─────────────────────────────────────────────────────────┐
-│              SERVICE LAYER                              │
-│   Core application logic for search and notes           │
-└────────────────────────┬────────────────────────────────┘
-                         │
-                   Data Operations
-                         │
-                         ▼
-┌─────────────────────────────────────────────────────────┐
-│              REPOSITORY LAYER                           │
-│   notesRepository.js (reads/writes to notes.json)       │
-└────────────────────────┬────────────────────────────────┘
-                         │
-                   File I/O
-                         │
-                         ▼
-┌─────────────────────────────────────────────────────────┐
-│              DATABASE (notes.json)                      │
-│              Persistent note storage                    │
-└─────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│                       CLIENT (Browser)                       │
+│ Home | Notes | About                                         │
+│ EJS views + responsive Tailwind CSS + client app.js          │
+│ HTMX swaps a deleted note out without a full page reload     │
+└─────────────────────────────┬────────────────────────────────┘
+                              │ HTTP request / HTML or JSON
+                              ▼
+┌──────────────────────────────────────────────────────────────┐
+│                    ROUTES LAYER (Express)                    │
+│ / | /about | GET /search | GET/POST /notes                   │
+│ DELETE /notes/:id                                            │
+└─────────────────────────────┬────────────────────────────────┘
+                              │ Route handler
+                              ▼
+┌──────────────────────────────────────────────────────────────┐
+│                     CONTROLLER LAYER                         │
+│ Translates HTTP input and service results into responses     │
+└─────────────────────────────┬────────────────────────────────┘
+                              │ Business operation
+                              ▼
+┌──────────────────────────────────────────────────────────────┐
+│                       SERVICE LAYER                          │◄──── Jest
+│ Validation, trimming, search URLs, note rules, DTO mapping   │      service tests
+└─────────────────────────────┬────────────────────────────────┘      with mocked
+                              │ Data operation                        repository
+                              ▼
+┌──────────────────────────────────────────────────────────────┐
+│                     REPOSITORY LAYER                         │
+│ notesRepository.js: Mongoose schema and per-record methods   │
+│ getAll | findById | create | updateById | removeById         │
+└─────────────────────────────┬────────────────────────────────┘
+                              │ Mongoose queries
+                              ▼
+┌──────────────────────────────────────────────────────────────┐
+│                    DATABASE (MongoDB)                        │
+│ Persistent notes with query, text, searchUrl, and timestamps │
+└──────────────────────────────────────────────────────────────┘
 ```
 
 ### Search Feature Request Flow:
@@ -115,23 +115,51 @@ New tab opens with search results
 ### Notes Feature Request Flow:
 
 ```
-A user fills out a search query and note body on /notes
+A user opens /notes
+            │
+            ▼
+[Routes] GET /notes
+            │
+            ▼
+[Controller + Service] Request all notes
+            │
+            ▼
+[Mongoose Repository] Read notes from MongoDB
+            │
+            ▼
+[Response] Render the responsive Tailwind notes view
+
+A user submits a search query and note body
             │
             ▼
 [Routes] POST /notes
             │
             ▼
-[Controller] Extract and validate form data
+[Controller] Extract JSON request data
             │
             ▼
-[Service] Format note object with search query and note text
+[Service] Validate and trim fields, then build the search URL
             │
             ▼
-[Repository] Write note to notes.json file
+[Mongoose Repository] Create the note in MongoDB
             │
             ▼
-[Response] Return success/error to client
+[Response] Return the created note DTO as JSON
             │
             ▼
-Notes list updated and displayed on page
+[Client app.js] Add the styled note to the page
+
+A user clicks a note's Delete button
+            │
+            ▼
+[HTMX] DELETE /notes/:id
+            │
+            ▼
+[Service + Mongoose Repository] Find and delete it in MongoDB
+            │
+            ▼
+[Response] Empty 200 response
+            │
+            ▼
+[HTMX] Remove the matching <li> without reloading the page
 ```

@@ -2,24 +2,21 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title><%= title %></title>
     <link rel="stylesheet" href="/style.css" />
   </head>
-  <body>
+  <body class="min-h-screen bg-gray-50 text-gray-900 antialiased">
     <%- include('partials/header') %>
-    <main>
-      <h2>About</h2>
-      <p>
-        We are a note taking app that is trying to make searching the web more
-        sustainable, meaningful and informative.
-      </p>
-      <p>
-        When you search from here we add "-ai-none" to the query. That tells
-        Google to leave the AI overview out.
-      </p>
-      <p>
-        Notes you save keep a link back to their search so you can run it again.
-      </p>
+    <main class="mx-auto max-w-3xl px-4 py-12 sm:px-6 sm:py-20">
+      <p class="text-sm font-bold uppercase text-teal-700">About the project</p>
+      <h1 class="mt-3 text-4xl font-bold text-gray-950 sm:text-5xl">A quieter way to research.</h1>
+      <div class="mt-8 space-y-6 border-l-4 border-amber-400 pl-5 text-lg leading-8 text-gray-600 sm:pl-8">
+        <p>Search Notes is a note-taking app designed to make web research more sustainable, meaningful, and informative.</p>
+        <p>When you search here, we add <code class="rounded bg-gray-200 px-1.5 py-1 text-sm font-semibold text-gray-800">-ai-none</code> to your query so Google leaves the AI overview out.</p>
+        <p>Every saved note keeps a link to its original search, making it easy to revisit the source and continue your work.</p>
+      </div>
+      <a href="/notes" class="mt-10 inline-flex rounded bg-teal-700 px-5 py-3 text-sm font-semibold text-white hover:bg-teal-800 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:ring-offset-2">Start taking notes</a>
     </main>
   </body>
 </html>

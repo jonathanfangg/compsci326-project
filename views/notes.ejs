@@ -1,41 +1,55 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title><%= title %></title>
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/style.css" />
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
   </head>
-  <body>
+  <body class="min-h-screen bg-gray-50 text-gray-900 antialiased">
     <%- include('partials/header') %>
-    <main>
-      <h2>Save a note</h2>
-      <form id="note-form">
-        <label for="query">Search query</label>
-        <input id="query" name="query" type="text">
-        <label for="text">Note</label>
-        <textarea id="text" name="text" rows="4"></textarea>
-        <button type="submit">Save note</button>
-      </form>
-      <p id="error"></p>
-
-      <h2>Saved notes</h2>
-      <ul id="note-list">
-        <% notes.forEach((note) => { %>
-          <li>
-            <a href="<%= note.searchUrl %>"><%= note.query %></a>
-            <p><%= note.text %></p>
-            <span class="htmx-indicator" id="indicator-<%= note.id %>">Deleting...</span>
-            <button
-              hx-delete="/notes/<%= note.id %>"
-              hx-target="closest li"
-              hx-swap="outerHTML"
-              hx-confirm="Delete this note?"
-              hx-indicator="#indicator-<%= note.id %>"
-            >Delete</button>
-          </li>
-        <% }); %>
-      </ul>
+    <main class="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
+      <div class="mb-8 sm:flex sm:items-end sm:justify-between">
+        <div>
+          <p class="text-sm font-bold uppercase text-teal-700">Your workspace</p>
+          <h1 class="mt-2 text-3xl font-bold text-gray-950 sm:text-4xl">Research notes</h1>
+        </div>
+        <p class="mt-3 text-sm text-gray-500 sm:mt-0"><%= notes.length %> saved <%= notes.length === 1 ? 'note' : 'notes' %></p>
+      </div>
+      <div class="grid gap-8 lg:grid-cols-[20rem_1fr] lg:items-start">
+        <section class="border border-gray-200 bg-white p-5 shadow-sm sm:p-6 lg:sticky lg:top-6">
+          <h2 class="text-lg font-bold text-gray-950">Save a note</h2>
+          <form id="note-form" class="mt-5 space-y-4">
+            <div>
+              <label for="query" class="block text-sm font-semibold text-gray-700">Search query</label>
+              <input id="query" name="query" type="text" required class="mt-1 block w-full rounded border border-gray-300 px-3 py-2.5 shadow-sm outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100" />
+            </div>
+            <div>
+              <label for="text" class="block text-sm font-semibold text-gray-700">Note</label>
+              <textarea id="text" name="text" rows="5" required class="mt-1 block w-full resize-y rounded border border-gray-300 px-3 py-2.5 shadow-sm outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100"></textarea>
+            </div>
+            <button type="submit" class="w-full rounded bg-teal-700 px-4 py-2.5 font-semibold text-white shadow-sm hover:bg-teal-800 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:ring-offset-2 sm:w-auto">Save note</button>
+          </form>
+          <p id="error" role="alert" class="mt-3 text-sm font-medium text-red-700"></p>
+        </section>
+        <section aria-labelledby="saved-notes-heading">
+          <h2 id="saved-notes-heading" class="sr-only">Saved notes</h2>
+          <p id="empty-state" class="border border-dashed border-gray-300 bg-white px-5 py-10 text-center text-gray-500 <%= notes.length ? 'hidden' : '' %>">No notes yet. Save your first research note.</p>
+          <ul id="note-list" class="grid gap-4 sm:grid-cols-2">
+            <% notes.forEach((note) => { %>
+              <li class="flex min-w-0 flex-col border border-gray-200 bg-white p-5 shadow-sm">
+                <a href="<%= note.searchUrl %>" target="_blank" rel="noopener" class="break-words text-lg font-bold text-teal-700 hover:text-teal-900 hover:underline"><%= note.query %></a>
+                <p class="mt-3 flex-1 whitespace-pre-wrap break-words leading-7 text-gray-600"><%= note.text %></p>
+                <div class="mt-5 flex items-center justify-between border-t border-gray-100 pt-4">
+                  <span class="htmx-indicator text-sm text-gray-500" id="indicator-<%= note.id %>">Deleting...</span>
+                  <button class="ml-auto rounded px-3 py-2 text-sm font-semibold text-red-700 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-600" hx-delete="/notes/<%= note.id %>" hx-target="closest li" hx-swap="outerHTML" hx-confirm="Delete this note?" hx-indicator="#indicator-<%= note.id %>">Delete</button>
+                </div>
+              </li>
+            <% }); %>
+          </ul>
+        </section>
+      </div>
     </main>
     <script src="/app.js" defer></script>
   </body>

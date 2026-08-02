@@ -2,25 +2,27 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title><%= title %></title>
     <link rel="stylesheet" href="/style.css" />
   </head>
-  <body>
+  <body class="min-h-screen bg-gray-50 text-gray-900 antialiased">
     <%- include('partials/header') %>
-    <main>
-      <p>Welcome to our note taking app!</p>
-      <p>
-        You can search from here and we will send it to Google without the AI
-        overview.
-      </p>
-
-      <form action="/search" method="get" target="_blank">
-        <label for="q">Search the web</label>
-        <input id="q" name="q" type="text" />
-        <button type="submit">Search</button>
+    <main class="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:px-6 sm:py-20 lg:grid-cols-[1fr_25rem] lg:items-center lg:gap-16">
+      <section>
+        <p class="mb-3 text-sm font-bold uppercase text-teal-700">Search with intention</p>
+        <h1 class="max-w-2xl text-4xl font-bold leading-tight text-gray-950 sm:text-5xl">Keep useful searches and thoughtful notes together.</h1>
+        <p class="mt-5 max-w-2xl text-lg leading-8 text-gray-600">Search the web without the AI overview, then save the context you want to return to later.</p>
+        <a href="/notes" class="mt-8 inline-flex rounded bg-teal-700 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-teal-800 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:ring-offset-2">Open your notes</a>
+      </section>
+      <form action="/search" method="get" target="_blank" class="border border-gray-200 bg-white p-5 shadow-sm sm:p-7">
+        <label for="q" class="block text-sm font-semibold text-gray-900">Search the web</label>
+        <p class="mt-1 text-sm leading-6 text-gray-500">Results open in a new tab without an AI overview.</p>
+        <div class="mt-5 flex flex-col gap-3 sm:flex-row lg:flex-col">
+          <input id="q" name="q" type="search" required placeholder="What are you researching?" class="min-w-0 flex-1 rounded border border-gray-300 bg-white px-3 py-3 text-gray-900 shadow-sm outline-none placeholder:text-gray-400 focus:border-teal-600 focus:ring-2 focus:ring-teal-100" />
+          <button type="submit" class="rounded bg-gray-900 px-5 py-3 font-semibold text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-2">Search</button>
+        </div>
       </form>
-
-      <p><a href="/notes">Go to your notes</a></p>
     </main>
   </body>
 </html>
