@@ -6,7 +6,8 @@
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "start": "node server.js",
-    "build:css": "tailwindcss -i ./src/input.css -o ./public/style.css"
+    "build:css": "tailwindcss -i ./src/input.css -o ./public/style.css",
+    "seed": "node seed.js"
   },
   "repository": {
     "type": "git",
