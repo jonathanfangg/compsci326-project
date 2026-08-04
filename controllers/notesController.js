@@ -7,7 +7,7 @@ export const index = async (req, res) => {
 };
 
 export const create = async (req, res) => {
-  const result = await notesService.createNote(req.body);
+  const result = await notesService.createNote(req.body, req.user);
   if (!result.ok) {
     res.status(result.error.status).json({ error: result.error.message });
     return;
@@ -21,7 +21,7 @@ export const destroy = async (req, res) => {
     res.status(400).json({ error: "id must be a valid id" });
     return;
   }
-  const result = await notesService.deleteNote(id);
+  const result = await notesService.deleteNote(id, req.user);
   if (!result.ok) {
     res.status(result.error.status).json({ error: result.error.message });
     return;
