@@ -39,5 +39,9 @@ export const me = async (req, res) => {
     return;
   }
   const user = await usersRepository.findById(req.user.id);
+  if (!user) {
+    res.status(401).json({ error: "not logged in" });
+    return;
+  }
   res.status(200).json(toUserDto(user));
 };

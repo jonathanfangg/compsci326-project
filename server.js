@@ -41,6 +41,10 @@ app.get("/about", (req, res) => {
   res.render("about", { title: "About" });
 });
 
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok" });
+});
+
 app.use((req, res) => {
   res.status(404).send("Page not found.");
 });
