@@ -3,7 +3,8 @@ import morgan from "morgan";
 import notesRouter from "./routes/notes.js";
 import searchRouter from "./routes/search.js";
 import mongoose from "mongoose";
-import cookieParser from "cookie-parser";
+import session from "express-session";
+import MongoStore from "connect-mongo";
 import authRouter from "./routes/auth.js";
 import { attachUser } from "./middleware/attachUser.js";
 
@@ -19,7 +20,19 @@ app.set("views", "views");
 
 app.use(express.static("public"));
 app.use(express.json());
-app.use(cookieParser(SESSION_SECRET));
+app.use(
+  session({
+    secret: SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({ mongoUrl: MONGODB_URI }),
+    cookie: {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+    },
+  }),
+);
 app.use(attachUser);
 
 app.use((req, res, next) => {

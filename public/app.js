@@ -1,6 +1,37 @@
 const form = document.querySelector("#note-form");
 const list = document.querySelector("#note-list");
 const error = document.querySelector("#error");
+const status = document.querySelector("#status");
+let deleteFocusTarget;
+let deletedNoteName;
+
+document.addEventListener("htmx:beforeRequest", (event) => {
+  const deleteButton = event.detail.elt.closest("button[hx-delete]");
+  if (!deleteButton) return;
+
+  const item = deleteButton.closest("li");
+  deleteFocusTarget =
+    item.nextElementSibling?.querySelector("button[hx-delete]") ||
+    item.previousElementSibling?.querySelector("button[hx-delete]") ||
+    form.querySelector("#query");
+  deletedNoteName = item.querySelector("a")?.textContent.trim() || "Note";
+});
+
+document.addEventListener("htmx:afterSettle", (event) => {
+  const responseStatus = event.detail.xhr?.status;
+  const successful = responseStatus >= 200 && responseStatus < 300;
+  if (!deleteFocusTarget || !successful) return;
+
+  deleteFocusTarget.focus();
+  status.textContent = deletedNoteName + " deleted.";
+  deleteFocusTarget = undefined;
+  deletedNoteName = undefined;
+});
+
+document.addEventListener("htmx:responseError", () => {
+  deleteFocusTarget = undefined;
+  deletedNoteName = undefined;
+});
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -17,8 +48,9 @@ form.addEventListener("submit", async (event) => {
   }
   error.textContent = "";
   const item = document.createElement("li");
+  item.tabIndex = -1;
   item.className =
-    "flex min-w-0 flex-col border border-gray-200 bg-white p-5 shadow-sm";
+    "flex min-w-0 flex-col border border-gray-200 bg-white p-5 shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-600 focus:ring-offset-2";
   const link = document.createElement("a");
   link.href = data.searchUrl;
   link.target = "_blank";
@@ -54,4 +86,6 @@ form.addEventListener("submit", async (event) => {
   document.querySelector("#empty-state")?.classList.add("hidden");
   htmx.process(item);
   form.reset();
+  item.focus();
+  status.textContent = data.query + " added.";
 });

@@ -213,6 +213,9 @@
     white-space: nowrap;
     border-width: 0;
   }
+  .sticky {
+    position: sticky;
+  }
   .mx-auto {
     margin-inline: auto;
   }
@@ -278,6 +281,9 @@
   }
   .flex-1 {
     flex: 1;
+  }
+  .resize {
+    resize: both;
   }
   .resize-y {
     resize: vertical;
@@ -510,8 +516,8 @@
     --tw-outline-style: none;
     outline-style: none;
   }
-  .placeholder\:text-gray-400::placeholder {
-    color: var(--color-gray-400);
+  .placeholder\:text-gray-600::placeholder {
+    color: var(--color-gray-600);
   }
   @media (hover: hover) {
     .hover\:bg-gray-100:hover {
