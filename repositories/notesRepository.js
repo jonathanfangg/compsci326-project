@@ -5,11 +5,16 @@ const noteSchema = new mongoose.Schema(
     query: { type: String, required: true },
     text: { type: String, required: true },
     searchUrl: { type: String, required: true },
+    ownerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
   },
   { timestamps: true },
 );
 
-const Note = mongoose.model("Note", noteSchema);
+export const Note = mongoose.model("Note", noteSchema);
 
 export const isValidId = (id) => mongoose.Types.ObjectId.isValid(id);
 export const getAll = async () => Note.find().lean();

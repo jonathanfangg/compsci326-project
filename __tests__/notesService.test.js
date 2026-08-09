@@ -7,9 +7,13 @@ jest.unstable_mockModule("../repositories/notesRepository.js", () => ({
   removeById: jest.fn(),
 }));
 
+jest.unstable_mockModule("../repositories/usersRepository.js", () => ({
+  findById: jest.fn(),
+}));
+
 const { createNote, deleteNote, listNotes, searchFor } =
   await import("../services/notesService.js");
-const { getAll, findById, removeById } =
+const { getAll, findById, create, removeById } =
   await import("../repositories/notesRepository.js");
 
 test("createNote rejects a missing query", async () => {
@@ -52,10 +56,13 @@ test("createNote rejects a request that has no body at all", async () => {
 });
 
 test("createNote saves a valid note and returns its DTO", async () => {
-  const result = await createNote({
-    query: "how do tides work",
-    text: "The moon pulls water toward it.",
-  });
+  const result = await createNote(
+    {
+      query: "how do tides work",
+      text: "The moon pulls water toward it.",
+    },
+    { id: "alice-id" },
+  );
   expect(result.ok).toBe(true);
   expect(result.value).toEqual({
     id: "fake-id",
@@ -66,8 +73,21 @@ test("createNote saves a valid note and returns its DTO", async () => {
   });
 });
 
+test("createNote stores the actor's id as ownerId", async () => {
+  await createNote(
+    { query: "how do tides work", text: "The moon pulls water toward it." },
+    { id: "alice-id" },
+  );
+  expect(create).toHaveBeenCalledWith(
+    expect.objectContaining({ ownerId: "alice-id" }),
+  );
+});
+
 test("createNote trims the query and the text before saving", async () => {
-  const result = await createNote({ query: "  tides  ", text: "  the moon  " });
+  const result = await createNote(
+    { query: "  tides  ", text: "  the moon  " },
+    { id: "alice-id" },
+  );
   expect(result.ok).toBe(true);
   expect(result.value.query).toBe("tides");
   expect(result.value.text).toBe("the moon");
@@ -121,7 +141,58 @@ test("deleteNote removes the note when it exists", async () => {
     query: "q",
     text: "t",
     searchUrl: "u",
+    ownerId: { toString: () => "alice-id" },
   });
-  const result = await deleteNote("fake-id");
+  const result = await deleteNote("fake-id", { id: "alice-id" });
+  expect(result.ok).toBe(true);
+});
+
+test("deleteNote returns a 403-shaped Err when the actor does not own the note", async () => {
+  findById.mockResolvedValueOnce({
+    _id: "fake-id",
+    query: "q",
+    text: "t",
+    searchUrl: "u",
+    ownerId: { toString: () => "alice-id" },
+  });
+  const { findById: findUserById } =
+    await import("../repositories/usersRepository.js");
+  findUserById.mockResolvedValueOnce({ role: "member" });
+  const result = await deleteNote("fake-id", { id: "bob-id" });
+  expect(result.ok).toBe(false);
+  expect(result.error).toEqual({
+    status: 403,
+    message: "you do not have permission to delete this note",
+  });
+});
+
+test("deleteNote does not remove the note when the actor is not allowed", async () => {
+  findById.mockResolvedValueOnce({
+    _id: "fake-id",
+    query: "q",
+    text: "t",
+    searchUrl: "u",
+    ownerId: { toString: () => "alice-id" },
+  });
+  const { findById: findUserById } =
+    await import("../repositories/usersRepository.js");
+  findUserById.mockResolvedValueOnce({ role: "member" });
+  removeById.mockClear();
+  await deleteNote("fake-id", { id: "bob-id" });
+  expect(removeById).not.toHaveBeenCalled();
+});
+
+test("deleteNote lets an admin delete a note they do not own", async () => {
+  findById.mockResolvedValueOnce({
+    _id: "fake-id",
+    query: "q",
+    text: "t",
+    searchUrl: "u",
+    ownerId: { toString: () => "alice-id" },
+  });
+  const { findById: findUserById } =
+    await import("../repositories/usersRepository.js");
+  findUserById.mockResolvedValueOnce({ role: "admin" });
+  const result = await deleteNote("fake-id", { id: "admin-id" });
   expect(result.ok).toBe(true);
 });
