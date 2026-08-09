@@ -2,6 +2,10 @@ import * as authService from "../services/authService.js";
 import * as usersRepository from "../repositories/usersRepository.js";
 import { toUserDto } from "../dtos/userDto.js";
 
+export const loginPage = (req, res) => {
+  res.render("login", { title: "Log in" });
+};
+
 export const signup = async (req, res) => {
   const result = await authService.signup(req.body);
   if (!result.ok) {

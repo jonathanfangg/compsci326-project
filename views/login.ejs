@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body class="min-h-screen bg-gray-50 text-gray-900 antialiased">
+    <%- include('partials/header') %>
+    <main class="mx-auto max-w-md px-4 py-12 sm:px-6 sm:py-20">
+      <section class="border border-gray-200 bg-white p-6 shadow-sm sm:p-8">
+        <h1 class="text-3xl font-bold text-gray-950">Log in</h1>
+        <p class="mt-2 text-sm leading-6 text-gray-600">Access your saved research notes.</p>
+        <form id="login-form" class="mt-6 space-y-4">
+          <div>
+            <label for="email" class="block text-sm font-semibold text-gray-700">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" required class="mt-1 block w-full rounded border border-gray-300 bg-white px-3 py-2.5 text-gray-900 shadow-sm outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100" />
+          </div>
+          <div>
+            <label for="password" class="block text-sm font-semibold text-gray-700">Password</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" required class="mt-1 block w-full rounded border border-gray-300 bg-white px-3 py-2.5 text-gray-900 shadow-sm outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100" />
+          </div>
+          <button type="submit" class="w-full rounded bg-teal-700 px-4 py-2.5 font-semibold text-white shadow-sm hover:bg-teal-800 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:ring-offset-2">Log in</button>
+        </form>
+        <p id="login-error" role="alert" class="mt-4 text-sm font-medium text-red-700"></p>
+      </section>
+    </main>
+    <script src="/login.js" defer></script>
+  </body>
+</html>

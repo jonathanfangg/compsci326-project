@@ -21,7 +21,6 @@
     --color-gray-100: oklch(96.7% 0.003 264.542);
     --color-gray-200: oklch(92.8% 0.006 264.531);
     --color-gray-300: oklch(87.2% 0.01 258.338);
-    --color-gray-400: oklch(70.7% 0.022 261.325);
     --color-gray-500: oklch(55.1% 0.027 264.364);
     --color-gray-600: oklch(44.6% 0.03 256.802);
     --color-gray-700: oklch(37.3% 0.034 259.733);
@@ -30,6 +29,7 @@
     --color-gray-950: oklch(13% 0.028 261.692);
     --color-white: #fff;
     --spacing: 0.25rem;
+    --container-md: 28rem;
     --container-2xl: 42rem;
     --container-3xl: 48rem;
     --container-6xl: 72rem;
@@ -228,8 +228,14 @@
   .mt-3 {
     margin-top: calc(var(--spacing) * 3);
   }
+  .mt-4 {
+    margin-top: calc(var(--spacing) * 4);
+  }
   .mt-5 {
     margin-top: calc(var(--spacing) * 5);
+  }
+  .mt-6 {
+    margin-top: calc(var(--spacing) * 6);
   }
   .mt-8 {
     margin-top: calc(var(--spacing) * 8);
@@ -275,6 +281,9 @@
   }
   .max-w-6xl {
     max-width: var(--container-6xl);
+  }
+  .max-w-md {
+    max-width: var(--container-md);
   }
   .min-w-0 {
     min-width: 0px;
@@ -374,6 +383,9 @@
   }
   .p-5 {
     padding: calc(var(--spacing) * 5);
+  }
+  .p-6 {
+    padding: calc(var(--spacing) * 6);
   }
   .px-1\.5 {
     padding-inline: calc(var(--spacing) * 1.5);
@@ -599,6 +611,9 @@
     }
     .sm\:p-7 {
       padding: calc(var(--spacing) * 7);
+    }
+    .sm\:p-8 {
+      padding: calc(var(--spacing) * 8);
     }
     .sm\:px-6 {
       padding-inline: calc(var(--spacing) * 6);
