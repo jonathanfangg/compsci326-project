@@ -32,7 +32,7 @@ How to get it started:
 - Visit http://localhost:3000 to view the server.
 - To shut the server down, type Ctrl + C into your terminal.
 
-New features:
+Sprint2 updates:
 
 - We have added search and notes. `/search` is accessed through the home page, and it opens a new tab with your search query and `-ai-none` appended to it.
 - `/notes` lets you create and save notes that capture what your search query was and what you learned from the search. The form consists of a "Search Query" title section and a "Note" body section.

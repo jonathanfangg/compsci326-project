@@ -17,7 +17,7 @@ document.addEventListener("htmx:beforeRequest", (event) => {
   deletedNoteName = item.querySelector("a")?.textContent.trim() || "Note";
 });
 
-document.addEventListener("htmx:afterSettle", (event) => {
+document.addEventListener("htmx:beforeSwap", (event) => {
   const responseStatus = event.detail.xhr?.status;
   const successful = responseStatus >= 200 && responseStatus < 300;
   if (!deleteFocusTarget || !successful) return;
