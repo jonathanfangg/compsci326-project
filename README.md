@@ -23,14 +23,43 @@ What the project is:
 
 How to get it started:
 
-- Open your preferred IDE and run Git: Clone, putting this link in when prompted: https://github.com/jonathanfangg/compsci326-project
-- Once inside the project, open a terminal and run:
-  - npm install
-  - npm run build:css
-  - npm start
-- The server requires MongoDB. Set `MONGODB_URI` to your MongoDB connection string; when it is not set, the app uses `mongodb://dev:devpassword@mongo:27017/devdb?authSource=admin`, which matches the development container.
-- Visit http://localhost:3000 to view the server.
-- To shut the server down, type Ctrl + C into your terminal.
+- Clone the public repository and enter the project directory:
+
+  ```
+  git clone https://github.com/jonathanfangg/compsci326-project.git
+  cd compsci326-project
+  ```
+
+- Install dependencies and build Tailwind stylesheet:
+
+  ```
+  npm install
+  npm run build:css
+  ```
+
+- Seed the user database, then run test suite:
+
+  ```
+  npm run seed
+  npm test
+  ```
+
+  The seed command deletes all existing users and notes before creating `alice@example.com` and `admin@example.com` with password `hunter2`, plus one note from Alice.
+
+- Start the server and visit http://localhost:3000:
+
+  ```bash
+  npm start
+  ```
+
+  Stop the server with Ctrl+C.
+
+Environment variables:
+
+- `MONGODB_URI` is a MongoDB connection string. We use `mongodb://dev:devpassword@mongo:27017/devdb?authSource=admin`, and the app defaults to that value.
+- `SESSION_SECRET` signs the session cookie. A development value can be set with `export SESSION_SECRET=local-development-secret`. By default the app uses `dev-secret-change-me`.
+- `PORT` selects the HTTP port. For example, `export PORT=3000`. By default the port is set to 3000.
+- `NODE_ENV` controls cookie security. Use `export NODE_ENV=development` in the development container. By default, the session cookie is not marked `secure`, when set to `production`, it is marked `secure`.
 
 Sprint2 updates:
 
