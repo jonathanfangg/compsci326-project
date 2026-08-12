@@ -37,6 +37,12 @@ How to get it started:
   npm run build:css
   ```
 
+- Start MongoDB:
+
+  ```
+  dc-up mongo
+  ```
+
 - Seed the user database, then run test suite:
 
   ```
@@ -78,7 +84,7 @@ Sprint3 updates:
 Sprint4 updates:
 
 - Session based authentication: Create an account with `curl -X POST http://localhost:3000/signup -H "Content-Type: application/json" -d '{"email":"member@example.com","password":"choose-a-password"}'`, then open `/login` and enter those credentials. Passwords are hashed with bcrypt, and we use express-session with connect-mongo so session records persist in MongoDB. `POST /signup` creates a `member`, supports `member` and `admin` roles, and `POST /logout` destroys the session.
-- Service auth: Creating and deleting notes first passes through `requireLogin`, for deletion, `notesService.deleteNote` loads the note and then applies the `isOwnerOrAdmin` rule inside the service layer. The owner or an admin may delete it a note, while another member receives `403 Forbidden`, and an unauthenticated request receives `401 Unauthorized`. To verify it, log in as the seeded `alice@example.com`, or `admin@example.com`, both using password `hunter2`, then try deleting Alice's seeded note as its owner, an unrelated member, and an admin.
+- Service auth: Creating and deleting notes first passes through `requireLogin`, for deletion, `notesService.deleteNote` loads the note and then applies the `isOwnerOrAdmin` rule inside the service layer. The owner or an admin may delete it, while another member receives `403 Forbidden`, and an unauthenticated request receives `401 Unauthorized`. To verify it, log in as the seeded `alice@example.com`, or `admin@example.com`, both using password `hunter2`, then try deleting Alice's seeded note as its owner, an unrelated member, and an admin.
 - Accessibility improvements: Every text input has a label, and keyboard focus is restored to the next or previous Delete button after an HTMX deletion. Focus moves to a newly created note on creation. Contrast follows WCAG guidelines throughout the UI.
 - Health check: `GET /health` returns `{ "status": "ok" }` with HTTP 200. Test it with `curl http://localhost:3000/health`; it does not use `requireLogin`.
 

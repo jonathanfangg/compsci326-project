@@ -4,6 +4,12 @@ const error = document.querySelector("#error");
 const status = document.querySelector("#status");
 let deleteFocusTarget;
 let deletedNoteName;
+const updateCount = () => {
+  const n = list.children.length;
+  const noteCount = document.querySelector("#note-count");
+  if (noteCount)
+    noteCount.textContent = `${n} saved ${n === 1 ? "note" : "notes"}`;
+};
 
 document.addEventListener("htmx:beforeRequest", (event) => {
   const deleteButton = event.detail.elt.closest("button[hx-delete]");
@@ -31,6 +37,13 @@ document.addEventListener("htmx:beforeSwap", (event) => {
 document.addEventListener("htmx:responseError", () => {
   deleteFocusTarget = undefined;
   deletedNoteName = undefined;
+});
+
+document.addEventListener("htmx:afterSettle", () => {
+  updateCount();
+  if (list.children.length === 0) {
+    document.querySelector("#empty-state")?.classList.remove("hidden");
+  }
 });
 
 form.addEventListener("submit", async (event) => {
@@ -88,4 +101,5 @@ form.addEventListener("submit", async (event) => {
   form.reset();
   item.focus();
   status.textContent = data.query + " added.";
+  updateCount();
 });
